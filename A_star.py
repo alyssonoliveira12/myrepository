@@ -1,10 +1,18 @@
+#This code came from a Youtube comment from this video: https://www.youtube.com/watch?v=ob4faIum4kQ&ab_channel=TrevorPayne
+#Author: Kevin Pulido
+#27-Sept-2017
+#Steps:
+#1) Generate a list of all possible next Steps toward goal from current position
+#2) Store Children in PriorityQueue based on distance to goal, closest first
+#3) Select closest child and Repeat until goal reached or no more Children
+
 from queue import PriorityQueue
 
 class State(object):
     def __init__(self, value, parent,
                  start=0,
                  goal=0):
-        self.children = []
+        self.children = [] #possible paths / neighbouring possibilities
         self.parent = parent
         self.value = value
         self.dist = 0
@@ -12,18 +20,15 @@ class State(object):
         if parent:
             self.start = parent.start
             self.goal = parent.goal
-            self.path = parent.path[:]
-            self.path.append(value)
-        else:
-            self.path = [value]
+            self.path = parent.path[:] #[:] makes a copy of the list
+            self.path.append(value) #keep track of where we've been
+        else: #if there's no parent
+            self.path = [value] #this is the initial value
             self.start = start
             self.goal = goal
 
-
     def GetDistance(self):
         pass
-
-
     def CreateChildren(self):
         pass
 
@@ -33,15 +38,15 @@ class State_String(State):
                  start=0,
                  goal=0):
 
-        super(State_String, self).__init__(value, parent, start, goal)
-        self.dist = self.GetDistance()
+        super(State_String, self).__init__(value, parent, start, goal) #constructor
+        self.dist = self.GetDistance() #measure the distance to the goal
 
     def GetDistance(self):
 
-        if self.value == self.goal:
+        if self.value == self.goal: #have we reached our goal?
             return 0
         dist = 0
-        for i in range(len(self.goal)):
+        for i in range(len(self.goal)): #go trhough each letter of the goal
             letter = self.goal[i]
             try:
                 dist += abs(i - self.value.index(letter))
@@ -50,7 +55,7 @@ class State_String(State):
         return dist
 
     def CreateChildren(self):
-        if not self.children:
+        if not self.children: #precaution to avoid create a child twice
             for i in range(len(self.goal) - 1):
                 val = self.value
                 val = val[:i] + val[i + 1] + val[i] + val[i + 2:]
