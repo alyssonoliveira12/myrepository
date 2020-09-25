@@ -65,8 +65,8 @@ class State_String(State):
 
 class AStar_Solver:
     def __init__(self, start, goal):
-        self.path = []
-        self.visitedQueue = []
+        self.path = [] #stores the solution
+        self.visitedQueue = [] #store visited places
         self.priorityQueue = PriorityQueue()
         self.start = start
         self.goal = goal
@@ -77,25 +77,25 @@ class AStar_Solver:
                                   self.start,
                                   self.goal)
 
-        count = 0
-        self.priorityQueue.put((0, count, startState))
+        count = 0 #children's ID
+        self.priorityQueue.put((0, count, startState)) #tuple where 0 is the priority
 
-        while (not self.path and self.priorityQueue.qsize()):
-            closestChild = self.priorityQueue.get()[2]
+        while (not self.path and self.priorityQueue.qsize()): #while path is empty and queue is not
+            closestChild = self.priorityQueue.get()[2] #get the top priority child
             closestChild.CreateChildren()
             self.visitedQueue.append(closestChild.value)
 
             for child in closestChild.children:
                 if child.value not in self.visitedQueue:
                     count += 1
-                    if not child.dist:
+                    if not child.dist: #if dist is 0, we have have made to our goal
                         self.path = child.path
                         break
                     self.priorityQueue.put((child.dist, count, child))
 
-        if not self.path:
+        if not self.path: #error message
             print("Goal of %s is not possible!" % (self.goal))
-
+        
         return self.path
 
 
