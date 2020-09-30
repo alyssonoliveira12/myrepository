@@ -474,6 +474,7 @@ class Agente:
         self.movimenta(self.caminho_possiveis[0][1])
         self.fila_final.append(self.caminho_possiveis[0][1])
         print("Parabéns! Você saiu do labirinto")
+        print(self.fila_final)
 
 
 
